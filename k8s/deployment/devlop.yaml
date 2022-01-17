@@ -2,41 +2,39 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-        name: new-deployment
-        labels:
-                app: naga
-
+  name: busapp
+  namespace: devlop
 spec:
-        replicas: 3
-        selector:
-                matchLabels:
-                        app: naga
-
-        template:
-                metadata:
-                        name: newapp
-                        labels:
-                                app: naga
-
-                spec:
-                        containers:
-                        -       name: naga-container
-                                image: nagamlak/virtual-folio:1.1
-                                ports:
-                                - containerPort: 80
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bus
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        app: bus
+        tier: frontend
+    spec:
+      containers:
+        - name: busapp
+          image: learnitguide/busapp:2.1
+          ports:
+            - containerPort: 8001
 
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
-     name: myervice
-     labels:
-        app: nag123a
+  name: busapp
+  namespace: devlop
 spec:
-    selector:
-        app: naga
-    type: LoadBalancer
-    ports:
-      port: 80
-      targetPort: 80
+  selector:
+    app: bus
+    tier: frontend
+
+  ports:
+    - port: 80
+      targetPort: 8001
+  type: LoadBalancer
